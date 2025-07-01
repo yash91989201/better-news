@@ -8,7 +8,6 @@ import {
 	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import Header from "@/components/header";
 import Loader from "@/components/loader";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "@/index.css?url";
@@ -60,7 +59,6 @@ function RootDocument() {
 			</head>
 			<body>
 				<div className="grid h-svh grid-rows-[auto_1fr]">
-					<Header />
 					{isFetching ? <Loader /> : <Outlet />}
 				</div>
 				<Toaster richColors />
