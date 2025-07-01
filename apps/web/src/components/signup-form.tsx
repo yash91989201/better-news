@@ -30,7 +30,7 @@ export const SignupForm = () => {
 				{
 					onSuccess: () => {
 						navigate({
-							to: "/dashboard",
+							to: "/",
 						});
 						toast.success("Sign up successful");
 					},
