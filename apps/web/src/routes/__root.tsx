@@ -15,7 +15,7 @@ import type { authClient } from "@/lib/auth-client";
 import type { orpc } from "@/utils/orpc";
 
 export interface RouterAppContext {
-	orpc: typeof orpc;
+	api: typeof orpc;
 	queryClient: QueryClient;
 	authClient: typeof authClient;
 }

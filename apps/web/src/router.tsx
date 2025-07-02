@@ -13,7 +13,7 @@ export const createRouter = () => {
 		routeTree,
 		scrollRestoration: true,
 		defaultPreloadStaleTime: 0,
-		context: { orpc, queryClient, authClient },
+		context: { api: orpc, queryClient, authClient },
 		defaultPendingComponent: () => <Loader />,
 		defaultNotFoundComponent: () => <div>Not Found</div>,
 		Wrap: ({ children }) => (

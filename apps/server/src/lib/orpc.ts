@@ -1,5 +1,4 @@
 import { ORPCError, os } from "@orpc/server";
-import { db } from "@/db";
 import type { Context } from "./context";
 
 export const o = os.$context<Context>();
@@ -13,7 +12,6 @@ const requireAuth = o.middleware(async ({ context, next }) => {
 
 	return next({
 		context: {
-			db,
 			session: context.session,
 		},
 	});

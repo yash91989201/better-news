@@ -1,5 +1,7 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod/v4";
 import { user } from "./auth";
 import { commentTable } from "./comment";
 import { postUpvoteTable } from "./upvote";
@@ -9,7 +11,7 @@ export const postTable = pgTable("post", {
 	userId: text().notNull(),
 	title: text().notNull(),
 	url: text(),
-	content: text().notNull(),
+	content: text(),
 	points: integer().notNull().default(0),
 	commentCount: integer().notNull().default(0),
 	createdAt: timestamp({
@@ -31,3 +33,11 @@ export const postRelations = relations(postTable, ({ one, many }) => ({
 		relationName: "post",
 	}),
 }));
+
+export const postSchema = createSelectSchema(postTable);
+
+export const insertPostSchema = createInsertSchema(postTable, {
+	title: z.string().min(3, { error: "Title must be at least 3 chars long" }),
+	url: z.url().or(z.literal("")).optional(),
+	content: z.string().optional(),
+});
