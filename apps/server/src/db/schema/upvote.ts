@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { createSelectSchema } from "drizzle-zod";
+import { userTable } from "./auth";
 import { commentTable } from "./comment";
 import { postTable } from "./post";
 
@@ -17,9 +18,9 @@ export const postUpvoteRelations = relations(postUpvoteTable, ({ one }) => ({
 		references: [postTable.id],
 		relationName: "postUpvotes",
 	}),
-	user: one(user, {
+	user: one(userTable, {
 		fields: [postUpvoteTable.userId],
-		references: [user.id],
+		references: [userTable.id],
 		relationName: "user",
 	}),
 }));
@@ -39,10 +40,13 @@ export const commentUpvoteRelations = relations(
 			references: [commentTable.id],
 			relationName: "commentUpvotes",
 		}),
-		user: one(user, {
+		user: one(userTable, {
 			fields: [commentUpvoteTable.userId],
-			references: [user.id],
+			references: [userTable.id],
 			relationName: "user",
 		}),
 	}),
 );
+
+export const postUpvoteSchema = createSelectSchema(postUpvoteTable);
+export const commentUpvoteSchema = createSelectSchema(commentUpvoteTable);

@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod/v4";
-import { user } from "./auth";
+import { userTable } from "./auth";
 import { commentTable } from "./comment";
 import { postUpvoteTable } from "./upvote";
 
@@ -22,9 +22,9 @@ export const postTable = pgTable("post", {
 });
 
 export const postRelations = relations(postTable, ({ one, many }) => ({
-	author: one(user, {
+	author: one(userTable, {
 		fields: [postTable.userId],
-		references: [user.id],
+		references: [userTable.id],
 	}),
 	postUpvotes: many(postUpvoteTable, {
 		relationName: "postUpvotes",

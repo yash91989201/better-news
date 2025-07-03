@@ -8,7 +8,7 @@ import {
 	getTableColumns,
 	sql,
 } from "drizzle-orm";
-import { user } from "@/db/schema/auth";
+import { userTable } from "@/db/schema/auth";
 import { insertPostSchema, postTable } from "@/db/schema/post";
 import { postUpvoteTable } from "@/db/schema/upvote";
 import { getISOFormatDateQuery } from "@/lib";
@@ -87,15 +87,15 @@ export const postRouter = {
 					...getTableColumns(postTable),
 					createdAt: getISOFormatDateQuery(postTable.createdAt),
 					author: {
-						id: user.id,
-						username: user.name,
+						id: userTable.id,
+						username: userTable.name,
 					},
-					isUpvoted: user
+					isUpvoted: currentUser
 						? sql<boolean>`CASE WHEN ${postUpvoteTable.userId} IS NOT NULL THEN true ELSE false END`
 						: sql<boolean>`false`,
 				})
 				.from(postTable)
-				.leftJoin(user, eq(postTable.userId, user.id))
+				.leftJoin(userTable, eq(postTable.userId, userTable.id))
 				.orderBy(sortOrder)
 				.limit(limit)
 				.offset(offset)
