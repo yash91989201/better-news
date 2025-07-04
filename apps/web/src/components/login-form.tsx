@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import z from "zod/v4";
 import {
@@ -10,7 +10,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth";
 import Loader from "./loader";
 import { Button, buttonVariants } from "./ui/button";
 import { Input } from "./ui/input";
@@ -18,9 +18,6 @@ import { Label } from "./ui/label";
 
 export const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
 	const navigate = useNavigate();
-	const router = useRouter();
-	const session = authClient.useSession();
-
 	const { isPending } = authClient.useSession();
 
 	const form = useForm({
@@ -36,8 +33,6 @@ export const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
 				},
 				{
 					onSuccess: () => {
-						session.refetch();
-						router.invalidate();
 						toast.success("Sign in successful");
 						navigate({
 							to: redirectTo,

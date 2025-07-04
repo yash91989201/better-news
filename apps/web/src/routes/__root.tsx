@@ -10,11 +10,12 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Header } from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "@/index.css?url";
-import type { authClient } from "@/lib/auth-client";
-import type { orpc } from "@/utils/orpc";
+import type { authClient } from "@/lib/auth";
+import type { orpcClient, orpcQueryUtils } from "@/utils/orpc";
 
 export interface RouterAppContext {
-	api: typeof orpc;
+	api: typeof orpcQueryUtils;
+	orpcClient: typeof orpcClient;
 	queryClient: QueryClient;
 	authClient: typeof authClient;
 }
@@ -40,11 +41,12 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 			},
 		],
 	}),
-	beforeLoad: async ({ context: { authClient } }) => {
-		const session = await authClient.getSession();
+	beforeLoad: async ({ context: { orpcClient, authClient } }) => {
+		const serverSession = orpcClient.session.get();
+		const { data: clientSession } = await authClient.getSession();
 
 		return {
-			session,
+			session: serverSession ?? clientSession,
 		};
 	},
 	component: RootDocument,

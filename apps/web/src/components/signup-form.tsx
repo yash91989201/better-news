@@ -9,7 +9,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth";
 import { SignupFormSchema } from "@/lib/schema";
 import Loader from "./loader";
 import { Button, buttonVariants } from "./ui/button";

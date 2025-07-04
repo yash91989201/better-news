@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -9,11 +9,22 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth";
+import { queryClient } from "@/utils/orpc";
 
 export const UserMenu = () => {
+	const router = useRouter();
 	const navigate = useNavigate();
 	const { data: session, isPending } = authClient.useSession();
+
+	const onSignOutSuccess = () => {
+		router.invalidate();
+		queryClient.invalidateQueries();
+
+		navigate({
+			to: "/",
+		});
+	};
 
 	if (isPending) {
 		return <Skeleton className="h-9 w-24" />;
@@ -48,11 +59,7 @@ export const UserMenu = () => {
 						onClick={() => {
 							authClient.signOut({
 								fetchOptions: {
-									onSuccess: () => {
-										navigate({
-											to: "/",
-										});
-									},
+									onSuccess: onSignOutSuccess,
 								},
 							});
 						}}

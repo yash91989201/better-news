@@ -4,12 +4,9 @@ import { SignupRouteSearchParams } from "@/lib/schema";
 
 export const Route = createFileRoute("/signup")({
 	validateSearch: SignupRouteSearchParams,
-	beforeLoad: async ({ context: { authClient } }) => {
-		const session = await authClient.getSession();
-		if (session?.data?.user) {
-			return redirect({
-				to: "/",
-			});
+	beforeLoad: async ({ context: { session } }) => {
+		if (session) {
+			throw redirect({ to: "/" });
 		}
 	},
 	component: RouteComponent,
