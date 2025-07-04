@@ -10,21 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TopRouteImport } from './routes/top'
-import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as NewRouteImport } from './routes/new'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthSubmitRouteImport } from './routes/_auth/submit'
 
 const TopRoute = TopRouteImport.update({
   id: '/top',
   path: '/top',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SubmitRoute = SubmitRouteImport.update({
-  id: '/submit',
-  path: '/submit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -51,38 +46,43 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthSubmitRoute = AuthSubmitRouteImport.update({
+  id: '/submit',
+  path: '/submit',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/new': typeof NewRoute
   '/signup': typeof SignupRoute
-  '/submit': typeof SubmitRoute
   '/top': typeof TopRoute
+  '/submit': typeof AuthSubmitRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/new': typeof NewRoute
   '/signup': typeof SignupRoute
-  '/submit': typeof SubmitRoute
   '/top': typeof TopRoute
+  '/submit': typeof AuthSubmitRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_auth': typeof AuthRoute
+  '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/new': typeof NewRoute
   '/signup': typeof SignupRoute
-  '/submit': typeof SubmitRoute
   '/top': typeof TopRoute
+  '/_auth/submit': typeof AuthSubmitRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/new' | '/signup' | '/submit' | '/top'
+  fullPaths: '/' | '/login' | '/new' | '/signup' | '/top' | '/submit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/new' | '/signup' | '/submit' | '/top'
+  to: '/' | '/login' | '/new' | '/signup' | '/top' | '/submit'
   id:
     | '__root__'
     | '/'
@@ -90,17 +90,16 @@ export interface FileRouteTypes {
     | '/login'
     | '/new'
     | '/signup'
-    | '/submit'
     | '/top'
+    | '/_auth/submit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   LoginRoute: typeof LoginRoute
   NewRoute: typeof NewRoute
   SignupRoute: typeof SignupRoute
-  SubmitRoute: typeof SubmitRoute
   TopRoute: typeof TopRoute
 }
 
@@ -111,13 +110,6 @@ declare module '@tanstack/react-router' {
       path: '/top'
       fullPath: '/top'
       preLoaderRoute: typeof TopRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/submit': {
-      id: '/submit'
-      path: '/submit'
-      fullPath: '/submit'
-      preLoaderRoute: typeof SubmitRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -155,16 +147,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/submit': {
+      id: '/_auth/submit'
+      path: '/submit'
+      fullPath: '/submit'
+      preLoaderRoute: typeof AuthSubmitRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
+interface AuthRouteChildren {
+  AuthSubmitRoute: typeof AuthSubmitRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthSubmitRoute: AuthSubmitRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
   NewRoute: NewRoute,
   SignupRoute: SignupRoute,
-  SubmitRoute: SubmitRoute,
   TopRoute: TopRoute,
 }
 export const routeTree = rootRouteImport

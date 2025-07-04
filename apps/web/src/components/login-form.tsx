@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import z from "zod/v4";
 import {
@@ -17,6 +17,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
 export const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
+	const navigate = useNavigate();
 	const router = useRouter();
 	const session = authClient.useSession();
 
@@ -38,11 +39,13 @@ export const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
 						session.refetch();
 						router.invalidate();
 						toast.success("Sign in successful");
+						navigate({
+							to: redirectTo,
+						});
 					},
 					onError: (error) => {
 						toast.error(error.error.message);
 					},
-					redirectTo,
 				},
 			);
 		},

@@ -43,7 +43,9 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 	beforeLoad: async ({ context: { authClient } }) => {
 		const session = await authClient.getSession();
 
-		return { session };
+		return {
+			session,
+		};
 	},
 	component: RootDocument,
 });
