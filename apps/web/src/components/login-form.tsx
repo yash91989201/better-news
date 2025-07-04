@@ -1,17 +1,25 @@
 import { useForm } from "@tanstack/react-form";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import z from "zod/v4";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { authClient } from "@/lib/auth-client";
 import Loader from "./loader";
 import { Button, buttonVariants } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
-export const LoginForm = () => {
-	const navigate = useNavigate({
-		from: "/",
-	});
+export const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
+	const router = useRouter();
+	const session = authClient.useSession();
+
 	const { isPending } = authClient.useSession();
 
 	const form = useForm({
@@ -27,14 +35,14 @@ export const LoginForm = () => {
 				},
 				{
 					onSuccess: () => {
-						navigate({
-							to: "/",
-						});
+						session.refetch();
+						router.invalidate();
 						toast.success("Sign in successful");
 					},
 					onError: (error) => {
 						toast.error(error.error.message);
 					},
+					redirectTo,
 				},
 			);
 		},
@@ -51,81 +59,86 @@ export const LoginForm = () => {
 	}
 
 	return (
-		<div className="mx-auto mt-10 w-full max-w-md p-6">
-			<h1 className="mb-6 text-center font-bold text-3xl">Welcome Back</h1>
+		<Card className="mx-auto mt-10 w-full max-w-md">
+			<CardHeader>
+				<CardTitle className="text-center text-3xl">Welcome Back</CardTitle>
+				<CardDescription className="text-center">
+					Sign in to your account
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						void form.handleSubmit();
+					}}
+					className="space-y-4"
+				>
+					<div>
+						<form.Field name="email">
+							{(field) => (
+								<div className="space-y-2">
+									<Label htmlFor={field.name}>Email</Label>
+									<Input
+										id={field.name}
+										name={field.name}
+										type="email"
+										value={field.state.value}
+										onBlur={field.handleBlur}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+									{field.state.meta.errors.map((error) => (
+										<p key={error?.message} className="text-red-500">
+											{error?.message}
+										</p>
+									))}
+								</div>
+							)}
+						</form.Field>
+					</div>
 
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					void form.handleSubmit();
-				}}
-				className="space-y-4"
-			>
-				<div>
-					<form.Field name="email">
-						{(field) => (
-							<div className="space-y-2">
-								<Label htmlFor={field.name}>Email</Label>
-								<Input
-									id={field.name}
-									name={field.name}
-									type="email"
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-								/>
-								{field.state.meta.errors.map((error) => (
-									<p key={error?.message} className="text-red-500">
-										{error?.message}
-									</p>
-								))}
-							</div>
+					<div>
+						<form.Field name="password">
+							{(field) => (
+								<div className="space-y-2">
+									<Label htmlFor={field.name}>Password</Label>
+									<Input
+										id={field.name}
+										name={field.name}
+										type="password"
+										value={field.state.value}
+										onBlur={field.handleBlur}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+									{field.state.meta.errors.map((error) => (
+										<p key={error?.message} className="text-red-500">
+											{error?.message}
+										</p>
+									))}
+								</div>
+							)}
+						</form.Field>
+					</div>
+
+					<form.Subscribe>
+						{(state) => (
+							<Button
+								type="submit"
+								className="w-full"
+								disabled={!state.canSubmit || state.isSubmitting}
+							>
+								{state.isSubmitting ? "Submitting..." : "Sign In"}
+							</Button>
 						)}
-					</form.Field>
-				</div>
-
-				<div>
-					<form.Field name="password">
-						{(field) => (
-							<div className="space-y-2">
-								<Label htmlFor={field.name}>Password</Label>
-								<Input
-									id={field.name}
-									name={field.name}
-									type="password"
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-								/>
-								{field.state.meta.errors.map((error) => (
-									<p key={error?.message} className="text-red-500">
-										{error?.message}
-									</p>
-								))}
-							</div>
-						)}
-					</form.Field>
-				</div>
-
-				<form.Subscribe>
-					{(state) => (
-						<Button
-							type="submit"
-							className="w-full"
-							disabled={!state.canSubmit || state.isSubmitting}
-						>
-							{state.isSubmitting ? "Submitting..." : "Sign In"}
-						</Button>
-					)}
-				</form.Subscribe>
-			</form>
-
-			<div className="mt-4 text-center">
+					</form.Subscribe>
+				</form>
+			</CardContent>
+			<CardFooter className="justify-center">
 				<Link to="/signup" className={buttonVariants({ variant: "link" })}>
 					Need an account? Sign Up
 				</Link>
-			</div>
-		</div>
+			</CardFooter>
+		</Card>
 	);
 };

@@ -5,10 +5,9 @@ import {
 	HeadContent,
 	Outlet,
 	Scripts,
-	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import Loader from "@/components/loader";
+import { Header } from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "@/index.css?url";
 import type { authClient } from "@/lib/auth-client";
@@ -41,8 +40,8 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 			},
 		],
 	}),
-	beforeLoad: async ({ context }) => {
-		const session = await context.authClient.getSession();
+	beforeLoad: async ({ context: { authClient } }) => {
+		const session = await authClient.getSession();
 
 		return { session };
 	},
@@ -50,16 +49,20 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
-	const isFetching = useRouterState({ select: (s) => s.isLoading });
-
 	return (
-		<html lang="en" className="dark">
+		<html lang="en" suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>
 			<body>
-				<div className="grid h-svh grid-rows-[auto_1fr]">
-					{isFetching ? <Loader /> : <Outlet />}
+				<div className="flex min-h-screen flex-col text-foreground">
+					<Header />
+					<main className="container mx-auto grow gap-3">
+						<Outlet />
+					</main>
+					<footer className="p-4 text-center">
+						<p className="text-muted-foreground text-sm">Better News &copy;</p>
+					</footer>
 				</div>
 				<Toaster richColors />
 				<TanStackRouterDevtools position="bottom-left" />

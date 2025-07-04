@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -7,11 +8,10 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
-import { Button } from "./ui/button";
-import { Skeleton } from "./ui/skeleton";
 
-export default function UserMenu() {
+export const UserMenu = () => {
 	const navigate = useNavigate();
 	const { data: session, isPending } = authClient.useSession();
 
@@ -21,9 +21,14 @@ export default function UserMenu() {
 
 	if (!session) {
 		return (
-			<Button variant="outline" asChild>
-				<Link to="/login">Sign In</Link>
-			</Button>
+			<Link
+				to="/login"
+				className={buttonVariants({
+					variant: "secondary",
+				})}
+			>
+				LogIn
+			</Link>
 		);
 	}
 
@@ -58,4 +63,4 @@ export default function UserMenu() {
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
-}
+};
