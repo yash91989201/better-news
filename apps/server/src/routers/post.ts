@@ -11,7 +11,6 @@ import {
 import { userTable } from "@/db/schema/auth";
 import { insertPostSchema, postTable } from "@/db/schema/post";
 import { postUpvoteTable } from "@/db/schema/upvote";
-import { getISOFormatDateQuery } from "@/lib";
 import { protectedProcedure, publicProcedure } from "@/lib/orpc";
 import {
 	CreatePostOutput,
@@ -19,7 +18,6 @@ import {
 	UpvotePostInput,
 	UpvotePostOutput,
 } from "@/lib/schema";
-import type { GetPostOutputType } from "@/lib/types";
 
 export const postRouter = {
 	create: protectedProcedure
@@ -60,7 +58,7 @@ export const postRouter = {
 	getAll: publicProcedure
 		.input(paginationSchema)
 		.output(GetPostOutput)
-		.handler(async ({ context, input }): Promise<GetPostOutputType> => {
+		.handler(async ({ context, input }) => {
 			const currentUser = context.session?.user;
 			const { limit, order, page, sortBy, author, site } = input;
 
@@ -85,7 +83,6 @@ export const postRouter = {
 			const postQuery = context.db
 				.select({
 					...getTableColumns(postTable),
-					createdAt: getISOFormatDateQuery(postTable.createdAt),
 					author: {
 						id: userTable.id,
 						username: userTable.name,

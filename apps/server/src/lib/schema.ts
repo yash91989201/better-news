@@ -30,7 +30,7 @@ export const GetPostOutput = z.object({
 		page: z.number(),
 		totalPages: z.number(),
 	}),
-	data: z.array(postSchema.extend({ createdAt: z.string() })).optional(),
+	data: z.array(postSchema).optional(),
 });
 
 export const CreateCommentInput = insertCommentSchema.extend({
@@ -43,7 +43,6 @@ export const CreateCommentOutput = z.object({
 	message: z.string(),
 	data: commentSchema
 		.extend({
-			createdAt: z.string(),
 			childComments: z.array(commentSchema).optional(),
 			commentUpvotes: z.array(commentUpvoteSchema).optional(),
 			author: z.object({
@@ -79,6 +78,7 @@ export const CommentResponseSchema = commentSchema.extend({
 		name: z.string(),
 		id: z.string(),
 	}),
+	createdAt: z.date(),
 	get childComments() {
 		return z.array(CommentResponseSchema).optional();
 	},

@@ -23,14 +23,10 @@
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"],
-			"@server/*": ["../server/src/*"],
 			"@shared/*": ["../../packages/shared/src/*"]
 		}
 	},
 	"references": [
-		{
-			"path": "../server"
-		},
 		{
 			"path": "../../packages/shared"
 		}

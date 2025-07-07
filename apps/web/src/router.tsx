@@ -4,17 +4,16 @@ import { ErrorComponent } from "@/components/error-component";
 // CUSTOM COMPONENTS
 import Loader from "@/components/loader";
 import { NotFound } from "@/components/not-found";
-import { authClient } from "@/lib/auth";
 // UTILS
 import { routeTree } from "@/routeTree.gen";
-import { orpcClient, queryClient, orpcQueryUtils } from "@/utils/orpc";
+import { orpcQueryUtils, queryClient } from "@/utils/orpc";
 
 export const createRouter = () => {
 	const router = createTanStackRouter({
 		routeTree,
 		scrollRestoration: true,
 		defaultPreloadStaleTime: 0,
-		context: { api: orpcQueryUtils, queryClient, authClient, orpcClient },
+		context: { api: orpcQueryUtils, queryClient },
 		defaultPendingComponent: () => <Loader />,
 		defaultNotFoundComponent: () => <NotFound />,
 		defaultErrorComponent: ({ error }) => <ErrorComponent error={error} />,

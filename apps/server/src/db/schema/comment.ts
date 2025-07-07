@@ -12,7 +12,12 @@ export const commentTable = pgTable("comment", {
 	depth: integer().notNull().default(0),
 	commentCount: integer().notNull().default(0),
 	points: integer().notNull().default(0),
-	createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+	createdAt: timestamp({
+		mode: "date",
+		withTimezone: true,
+	})
+		.notNull()
+		.defaultNow(),
 	userId: text().notNull(),
 	postId: text().notNull(),
 	parentCommentId: integer(),

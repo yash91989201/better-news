@@ -10,7 +10,6 @@ import {
 import { commentTable } from "@/db/schema/comment";
 import { postTable } from "@/db/schema/post";
 import { commentUpvoteTable } from "@/db/schema/upvote";
-import { getISOFormatDateQuery } from "@/lib";
 import { protectedProcedure, publicProcedure } from "@/lib/orpc";
 import {
 	CreateCommentInput,
@@ -75,9 +74,6 @@ export const commentRouter = {
 						.returning({
 							...getTableColumns(commentTable),
 							parentCommentId: commentTable.parentCommentId,
-							createdAt: getISOFormatDateQuery(commentTable.createdAt).as(
-								"created_at",
-							),
 							commentCount: commentTable.commentCount,
 						});
 				});
@@ -143,11 +139,6 @@ export const commentRouter = {
 						columns: { userId: true },
 						where: eq(commentUpvoteTable.userId, currentUser?.id ?? ""),
 					},
-				},
-				extras: {
-					createdAt: getISOFormatDateQuery(commentTable.createdAt).as(
-						"created_at",
-					),
 				},
 			});
 
