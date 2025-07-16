@@ -1,14 +1,25 @@
 {
-  "name": "shared",
-  "module": "index.ts",
-  "type": "module",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "zod": "^3.25.67"
-  }
+	"name": "shared",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"type": "module",
+	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsc --watch"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.2.18"
+	},
+	"peerDependencies": {
+		"typescript": "^5.8.3"
+	},
+	"dependencies": {
+		"drizzle-orm": "^0.44.3",
+		"drizzle-zod": "^0.8.2",
+		"zod": "^4.0.5"
+	}
 }

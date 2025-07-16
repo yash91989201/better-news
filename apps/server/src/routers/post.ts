@@ -1,4 +1,13 @@
-import { paginationSchema } from "@shared/lib/schema";
+import { postTable, postUpvoteTable } from "@shared/db/schema";
+import { userTable } from "@shared/db/schema/auth";
+import {
+	CreatePostOutput,
+	GetPostOutput,
+	InsertPostSchema,
+	paginationSchema,
+	UpvotePostInput,
+	UpvotePostOutput,
+} from "@shared/lib/schema";
 import {
 	and,
 	asc,
@@ -8,20 +17,11 @@ import {
 	getTableColumns,
 	sql,
 } from "drizzle-orm";
-import { userTable } from "@/db/schema/auth";
-import { insertPostSchema, postTable } from "@/db/schema/post";
-import { postUpvoteTable } from "@/db/schema/upvote";
 import { protectedProcedure, publicProcedure } from "@/lib/orpc";
-import {
-	CreatePostOutput,
-	GetPostOutput,
-	UpvotePostInput,
-	UpvotePostOutput,
-} from "@/lib/schema";
 
 export const postRouter = {
 	create: protectedProcedure
-		.input(insertPostSchema)
+		.input(InsertPostSchema)
 		.output(CreatePostOutput)
 		.handler(async ({ context, input }) => {
 			try {

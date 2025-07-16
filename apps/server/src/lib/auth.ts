@@ -1,13 +1,13 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { reactStartCookies } from "better-auth/react-start";
-import { db } from "@/db";
 import {
 	accountTable,
 	sessionTable,
 	userTable,
 	verificationTable,
-} from "@/db/schema";
+} from "@shared/db/schema/auth";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { reactStartCookies } from "better-auth/react-start";
+import { db } from "@/db";
 import { env } from "@/env";
 
 export const auth = betterAuth({

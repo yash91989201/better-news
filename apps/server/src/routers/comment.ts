@@ -1,3 +1,12 @@
+import { commentTable, commentUpvoteTable, postTable } from "@shared/db/schema";
+import {
+	CreateCommentInput,
+	CreateCommentOutput,
+	GetCommentsInput,
+	GetCommentsOutput,
+	UpvoteCommentInput,
+	UpvoteCommentOutput,
+} from "@shared/lib/schema";
 import {
 	and,
 	asc,
@@ -7,18 +16,7 @@ import {
 	getTableColumns,
 	sql,
 } from "drizzle-orm";
-import { commentTable } from "@/db/schema/comment";
-import { postTable } from "@/db/schema/post";
-import { commentUpvoteTable } from "@/db/schema/upvote";
 import { protectedProcedure, publicProcedure } from "@/lib/orpc";
-import {
-	CreateCommentInput,
-	CreateCommentOutput,
-	GetCommentsInput,
-	GetCommentsOutput,
-	UpvoteCommentInput,
-	UpvoteCommentOutput,
-} from "@/lib/schema";
 
 export const commentRouter = {
 	create: protectedProcedure
