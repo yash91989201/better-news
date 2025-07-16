@@ -1,4 +1,4 @@
-import type z from "zod/v4";
+import type z from "zod";
 import type { CommentSchema, CommentUpvoteSchema, InsertCommentSchema, InsertCommentUpvoteSchema, InsertPostSchema, InsertPostUpvoteSchema, PostSchema, PostUpvoteSchema } from "@/lib/schema";
 export type PostType = z.infer<typeof PostSchema>;
 export type PostUpvoteType = z.infer<typeof PostUpvoteSchema>;
